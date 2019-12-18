@@ -24,6 +24,7 @@ struct network {
 	neuron** neurons;//двумерный массив нейронов
 	double*** weights;//веса нейронов([слой][номер нейрона][номер связи нейрона со следующим слоем])
 };
+
 network nn;
 
 	double sigm_proizvodnaya(double x) {//производная функции активации, понадобится при ошмбках нейросети
@@ -253,7 +254,7 @@ int main() {
 		}
 	}
 	else {//если не нужно обучение
-		setLayersNotStudy(l, size, "PerfectWeights.txt");
+		setLayersNotStudy(l, size, "Weights.txt");
 	}
 	fin.close();
 
