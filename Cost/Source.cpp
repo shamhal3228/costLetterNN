@@ -82,15 +82,15 @@ network nn;
 		}
 	}
 
-	void LayersCleaner(int LayerNumber, int start, int stop) {//очищает слои
+	void LayersCleaner(int LayerNumber, int stop) {//очищает слои
 		srand(time(0));
-		for (int i = start; i < stop; i++) {
+		for (int i = 0; i < stop; i++) {
 			nn.neurons[LayerNumber][i].value = 0;
 		}
 	}
 
-	void ForwardFeeder(int LayerNumber, int start, int stop) {//производит процесс ForwardFeed (разносидность нейросети, когда нейроны передают информацию от входа к выходу напрямую
-		for (int j = start; j < stop; j++) {
+	void ForwardFeeder(int LayerNumber, int stop) {//производит процесс ForwardFeed (разносидность нейросети, когда нейроны передают информацию от входа к выходу напрямую
+		for (int j = 0; j < stop; j++) {
 			for (int k = 0; k < nn.size[LayerNumber - 1]; k++) {
 				nn.neurons[LayerNumber][j].value += nn.neurons[LayerNumber - 1][k].value * nn.weights[LayerNumber - 1][k][j];
 			}
@@ -101,8 +101,8 @@ network nn;
 	double ForwardFeed() {//используется в обучении
 		setlocale(LC_ALL, "ru");
 		for (int i = 1; i < nn.layers; i++) {
-					LayersCleaner(i, 0, nn.size[i]);//очистка слоя
-					ForwardFeeder(i, 0, nn.size[i]);//"кормление" нейрона
+					LayersCleaner(i, nn.size[i]);//очистка слоя
+					ForwardFeeder(i, nn.size[i]);//"кормление" нейрона
 		}
 		double max = 0;
 		double prediction = 0;
@@ -119,8 +119,8 @@ network nn;
 	double ForwardFeed(string param) {//используется, когда начинается тест, выводит "шансы" букв на экран, аналогична по сути предыдущей функции
 		setlocale(LC_ALL, "ru");
 		for (int i = 1; i < nn.layers; i++) {
-					LayersCleaner(i, 0, nn.size[i]);
-					ForwardFeeder(i, 0, nn.size[i]);
+					LayersCleaner(i, nn.size[i]);
+					ForwardFeeder(i, nn.size[i]);
 		}
 		double max = 0;
 		double prediction = 0;
@@ -269,14 +269,13 @@ int main() {
 		set_input(input);//принимаем значения "текстового изображения"
 		result = ForwardFeed(string("show results"));//после "кормления" получаем возможный результат
 		cout << "Я считаю, что это буква " << char(result + 65) << "\n\n";
-		cout << "А какая это буква на самом деле?   ";
+		cout << "А какая это буква на самом деле?...";
 		cin >> right_res;
 		if (right_res != result + 65) {//если нейросеть не угадала букву, то меняем веса и сохраняем их
-			cout << "Хорошо, исправляю ошибку";
+			cout << "Хорошо господин, исправляю ошибку!";
 			BackPropogation(result, right_res - 65, 0.15);
 			SaveWeights();
 		}
 	}
-
 	return 0;
 }
